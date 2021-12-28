@@ -9,6 +9,7 @@ these aliases allows seamless support of multiple emacs
 
 <DTAppend name="next-level-cache" type="phandle" parentlabel="hps_0_arm_a9_0" val="hps_0_L2"/>
 <DTAppend name="next-level-cache" type="phandle" parentlabel="hps_0_arm_a9_1" val="hps_0_L2"/>
+<DTAppend name="enable-method" type="string" parentpath="cpus" val="altr,socfpga-smp" />
 
 <DTAppend name="cache-unified" type="bool" parentlabel="hps_0_L2" val="true"/>
 <DTAppend name="arm,tag-latency" parentlabel="hps_0_L2">
@@ -53,26 +54,26 @@ these aliases allows seamless support of multiple emacs
 <val type="hex">0x1000</val>
 </DTAppend>
 
-<!-- Removed by WZab
 <DTAppend name="fpgabridge@0" type="node" parentlabel="sopc0" newlabel="fpgabridge0"/>
 <DTAppend name="compatible" type="string" parentlabel="fpgabridge0" val="altr,socfpga-hps2fpga-bridge"/>
 <DTAppend name="label" type="string" parentlabel="fpgabridge0" val="hps2fpga"/>
 <DTAppend name="clocks" type="phandle" parentlabel="fpgabridge0" val="l4_main_clk"/>
+<DTAppend name="resets" type="phandle" parentlabel="fpgabridge0" val="hps_0_rstmgr 97"/>
 <DTAppend name="init-val" type="number" parentlabel="fpgabridge0" val="1"/>
 
 <DTAppend name="fpgabridge@1" type="node" parentlabel="sopc0" newlabel="fpgabridge1"/>
 <DTAppend name="compatible" type="string" parentlabel="fpgabridge1" val="altr,socfpga-lwhps2fpga-bridge"/>
 <DTAppend name="label" type="string" parentlabel="fpgabridge1" val="lwhps2fpga"/>
 <DTAppend name="clocks" type="phandle" parentlabel="fpgabridge1" val="l4_main_clk"/>
+<DTAppend name="resets" type="phandle" parentlabel="fpgabridge1" val="hps_0_rstmgr 96"/>
 <DTAppend name="init-val" type="number" parentlabel="fpgabridge1" val="1"/>
 
 <DTAppend name="fpgabridge@2" type="node" parentlabel="sopc0" newlabel="fpgabridge2"/>
 <DTAppend name="compatible" type="string" parentlabel="fpgabridge2" val="altr,socfpga-fpga2hps-bridge"/>
 <DTAppend name="label" type="string" parentlabel="fpgabridge2" val="fpga2hps"/>
 <DTAppend name="clocks" type="phandle" parentlabel="fpgabridge2" val="l4_main_clk"/>
+<DTAppend name="resets" type="phandle" parentlabel="fpgabridge2" val="hps_0_rstmgr 98"/> 
 <DTAppend name="init-val" type="number" parentlabel="fpgabridge2" val="1"/>
-
-End of removed by WZab-->
 
 <DTAppend name="reg" parentlabel="hps_0_usb0">
 <val type="hex">0xffb00000</val>
