@@ -1,0 +1,6 @@
+<BoardInfo>
+
+<DTAppend name="status" type="string" parentlabel="sysid_qsys_0" val="okay"/>
+<DTAppend name="status" type="string" parentlabel="testblk_0" val="okay"/>
+
+</BoardInfo>

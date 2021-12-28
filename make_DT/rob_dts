@@ -5,6 +5,7 @@
   --board board_info_DE0_NANO_SOC.xml\
   --board hps_common_board_info.xml\
   --board bridge_enable.xml\
+  --board periphs_enable.xml\
   --bridge-removal all\
   --clocks \
   --reset
