@@ -52,6 +52,12 @@ add_fileset_file reg_ctrl.vhd VHDL PATH ../src/reg_ctrl.vhd
 # parameters
 # 
 
+# 
+# module assignments
+# 
+set_module_assignment embeddedsw.dts.compatible wzab,testblk
+set_module_assignment embeddedsw.dts.group wzperiphs
+set_module_assignment embeddedsw.dts.vendor WZab
 
 # 
 # display items
