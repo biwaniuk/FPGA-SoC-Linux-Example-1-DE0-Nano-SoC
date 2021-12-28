@@ -175,8 +175,8 @@ module DE0_NANO_SOC(
     .memory_mem_dqs_n                      ( HPS_DDR3_DQS_N      ), //
     .memory_mem_odt                        ( HPS_DDR3_ODT        ), //
     .memory_mem_dm                         ( HPS_DDR3_DM         ), // 
-    .memory_oct_rzqin                      ( HPS_DDR3_RZQ        ), //
-    .led_OUT                               ( LED                 )  //
+    .memory_oct_rzqin                      ( HPS_DDR3_RZQ        ) //
+    //.led_OUT                               ( LED                 )  //
   );
 
 `ifdef EXT_RESET

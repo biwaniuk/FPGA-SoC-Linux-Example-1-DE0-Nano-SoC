@@ -17,14 +17,6 @@
          type = "int";
       }
    }
-   element LED8_AXI_0
-   {
-      datum _sortIndex
-      {
-         value = "2";
-         type = "int";
-      }
-   }
    element hps_0
    {
       datum _sortIndex
@@ -39,14 +31,6 @@
       {
          value = "0";
          type = "String";
-      }
-   }
-   element pump_axi4_to_axi4_0
-   {
-      datum _sortIndex
-      {
-         value = "3";
-         type = "int";
       }
    }
    element soc_system
@@ -186,32 +170,15 @@
    type="clock"
    dir="start" />
  <interface name="hps_0_hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
- <interface name="led" internal="LED8_AXI_0.LED" type="conduit" dir="end" />
  <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
  <interface name="reset" internal="FPGA_CLK.clk_in_reset" type="reset" dir="end" />
- <module name="FPGA_CLK" kind="clock_source" version="15.1" enabled="1">
+ <module name="FPGA_CLK" kind="clock_source" version="21.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
  </module>
- <module name="LED8_AXI_0" kind="LED8_AXI" version="1.0" enabled="1">
-  <parameter name="AUTO_START" value="true" />
-  <parameter name="C_ADDR_WIDTH" value="12" />
-  <parameter name="C_DATA_WIDTH" value="32" />
-  <parameter name="C_ID_WIDTH" value="12" />
-  <parameter name="DEFAULT_SEQ_0" value="24" />
-  <parameter name="DEFAULT_SEQ_1" value="36" />
-  <parameter name="DEFAULT_SEQ_2" value="66" />
-  <parameter name="DEFAULT_SEQ_3" value="129" />
-  <parameter name="DEFAULT_SEQ_4" value="66" />
-  <parameter name="DEFAULT_SEQ_5" value="36" />
-  <parameter name="DEFAULT_SEQ_6" value="0" />
-  <parameter name="DEFAULT_SEQ_7" value="0" />
-  <parameter name="DEFAULT_SEQ_LAST" value="5" />
-  <parameter name="DEFAULT_TIMER" value="100000000" />
- </module>
- <module name="hps_0" kind="altera_hps" version="15.1" enabled="1">
+ <module name="hps_0" kind="altera_hps" version="21.1" enabled="1">
   <parameter name="ABSTRACT_REAL_COMPARE_TEST" value="false" />
   <parameter name="ABS_RAM_MEM_INIT_FILENAME" value="meminit" />
   <parameter name="ACV_PHY_CLK_ADD_FR_PHASE" value="0.0" />
@@ -286,8 +253,10 @@
   <parameter name="DUPLICATE_AC" value="false" />
   <parameter name="ED_EXPORT_SEQ_DEBUG" value="false" />
   <parameter name="EMAC0_Mode" value="N/A" />
+  <parameter name="EMAC0_PTP" value="false" />
   <parameter name="EMAC0_PinMuxing" value="Unused" />
   <parameter name="EMAC1_Mode" value="RGMII" />
+  <parameter name="EMAC1_PTP" value="false" />
   <parameter name="EMAC1_PinMuxing" value="HPS I/O Set 0" />
   <parameter name="ENABLE_ABS_RAM_MEM_INIT" value="false" />
   <parameter name="ENABLE_BONDING" value="false" />
@@ -323,6 +292,7 @@
   <parameter name="F2SDRAM_Width" value="" />
   <parameter name="F2SINTERRUPT_Enable" value="true" />
   <parameter name="F2S_Width" value="2" />
+  <parameter name="FIX_READ_LATENCY" value="8" />
   <parameter name="FORCED_NON_LDC_ADDR_CMD_MEM_CK_INVERT" value="false" />
   <parameter name="FORCED_NUM_WRITE_FR_CYCLE_SHIFTS" value="0" />
   <parameter name="FORCE_DQS_TRACKING" value="AUTO" />
@@ -341,7 +311,6 @@
   <parameter name="FPGA_PERIPHERAL_INPUT_CLOCK_FREQ_I2C1_SCL_IN" value="100" />
   <parameter name="FPGA_PERIPHERAL_INPUT_CLOCK_FREQ_I2C2_SCL_IN" value="100" />
   <parameter name="FPGA_PERIPHERAL_INPUT_CLOCK_FREQ_I2C3_SCL_IN" value="100" />
-  <parameter name="FPGA_PERIPHERAL_INPUT_CLOCK_FREQ_SDIO_CLK_IN" value="100" />
   <parameter name="FPGA_PERIPHERAL_INPUT_CLOCK_FREQ_SPIS0_SCLK_IN" value="100" />
   <parameter name="FPGA_PERIPHERAL_INPUT_CLOCK_FREQ_SPIS1_SCLK_IN" value="100" />
   <parameter name="FPGA_PERIPHERAL_INPUT_CLOCK_FREQ_USB0_CLK_IN" value="100" />
@@ -739,136 +708,21 @@
   <parameter name="usb_mp_clk_div" value="0" />
   <parameter name="use_default_mpu_clk" value="true" />
  </module>
- <module
-   name="pump_axi4_to_axi4_0"
-   kind="pump_axi4_to_axi4"
-   version="1.0"
-   enabled="1">
-  <parameter name="AXI_VERSION" value="AXI4" />
-  <parameter name="C_ADDR_WIDTH" value="12" />
-  <parameter name="C_DATA_WIDTH" value="64" />
-  <parameter name="C_ID_WIDTH" value="12" />
-  <parameter name="I_ADDR_WIDTH" value="32" />
-  <parameter name="I_AUSER_WIDTH" value="2" />
-  <parameter name="I_AXI_ID" value="1" />
-  <parameter name="I_DATA_WIDTH" value="64" />
-  <parameter name="I_ID_WIDTH" value="2" />
-  <parameter name="I_USE_ADDR_USER" value="1" />
-  <parameter name="M_ADDR_WIDTH" value="32" />
-  <parameter name="M_AUSER_WIDTH" value="2" />
-  <parameter name="M_AXI_ID" value="0" />
-  <parameter name="M_DATA_WIDTH" value="64" />
-  <parameter name="M_ID_WIDTH" value="2" />
-  <parameter name="M_USE_ADDR_USER" value="1" />
-  <parameter name="O_ADDR_WIDTH" value="32" />
-  <parameter name="O_AUSER_WIDTH" value="2" />
-  <parameter name="O_AXI_ID" value="2" />
-  <parameter name="O_DATA_WIDTH" value="64" />
-  <parameter name="O_ID_WIDTH" value="2" />
-  <parameter name="O_USE_ADDR_USER" value="1" />
- </module>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="pump_axi4_to_axi4_0.I"
-   end="hps_0.f2h_axi_slave">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="pump_axi4_to_axi4_0.M"
-   end="hps_0.f2h_axi_slave">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="pump_axi4_to_axi4_0.O"
-   end="hps_0.f2h_axi_slave">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="LED8_AXI_0.CSR">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x1000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="pump_axi4_to_axi4_0.CSR">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
  <connection
    kind="clock"
-   version="15.1"
-   start="FPGA_CLK.clk"
-   end="LED8_AXI_0.ACLOCK" />
- <connection
-   kind="clock"
-   version="15.1"
-   start="FPGA_CLK.clk"
-   end="pump_axi4_to_axi4_0.C_CLK" />
- <connection
-   kind="clock"
-   version="15.1"
-   start="FPGA_CLK.clk"
-   end="pump_axi4_to_axi4_0.I_CLK" />
- <connection
-   kind="clock"
-   version="15.1"
-   start="FPGA_CLK.clk"
-   end="pump_axi4_to_axi4_0.M_CLK" />
- <connection
-   kind="clock"
-   version="15.1"
-   start="FPGA_CLK.clk"
-   end="pump_axi4_to_axi4_0.O_CLK" />
- <connection
-   kind="clock"
-   version="15.1"
+   version="21.1"
    start="FPGA_CLK.clk"
    end="hps_0.f2h_axi_clock" />
  <connection
    kind="clock"
-   version="15.1"
+   version="21.1"
    start="FPGA_CLK.clk"
    end="hps_0.h2f_axi_clock" />
  <connection
    kind="clock"
-   version="15.1"
+   version="21.1"
    start="FPGA_CLK.clk"
    end="hps_0.h2f_lw_axi_clock" />
- <connection
-   kind="interrupt"
-   version="15.1"
-   start="hps_0.f2h_irq0"
-   end="pump_axi4_to_axi4_0.IRQ">
-  <parameter name="irqNumber" value="0" />
- </connection>
- <connection
-   kind="reset"
-   version="15.1"
-   start="FPGA_CLK.clk_reset"
-   end="LED8_AXI_0.ARESETn" />
- <connection
-   kind="reset"
-   version="15.1"
-   start="FPGA_CLK.clk_reset"
-   end="pump_axi4_to_axi4_0.ARESETn" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
 </system>
