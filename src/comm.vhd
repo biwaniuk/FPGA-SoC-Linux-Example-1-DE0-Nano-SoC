@@ -7,6 +7,7 @@ entity comm is
     clock_sink_clk   : in  std_logic := '0';
     reset_sink_reset : in  std_logic := '0';
     internal_reset   : out std_logic := '0';
+    irq              : out std_logic := '0';
 
     avalon_master_write         : out std_logic;
     avalon_master_read          : out std_logic;
@@ -274,4 +275,6 @@ begin
     end if;
   end process as;
 
+  irq <= '1' when (ctrl(0) = '1') and (am_r.state = ST_AM_DONE) else '0';
+  
 end architecture rtl;  -- of comm

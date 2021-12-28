@@ -5,8 +5,9 @@ use ieee.numeric_std.all;
 entity gsrd is
 
   port (
-    clock_sink_clk   : in std_logic := '0';
-    reset_sink_reset : in std_logic := '0';
+    clock_sink_clk       : in  std_logic := '0';
+    reset_sink_reset     : in  std_logic := '0';
+    interrupt_sender_irq : out std_logic;
 
     avalon_master_write         : out std_logic;
     avalon_master_read          : out std_logic;
@@ -36,6 +37,7 @@ architecture df of gsrd is
       clock_sink_clk   : in  std_logic := '0';
       reset_sink_reset : in  std_logic := '0';
       internal_reset   : out std_logic := '0';
+      irq              : out std_logic := '0';
 
       avalon_master_write         : out std_logic;
       avalon_master_read          : out std_logic;
@@ -95,6 +97,7 @@ begin  -- architecture df
       clock_sink_clk   => clock_sink_clk,
       reset_sink_reset => reset_sink_reset,
       internal_reset   => int_reset,
+      irq              => interrupt_sender_irq,
 
       avalon_master_write         => avalon_master_write,
       avalon_master_read          => avalon_master_read,

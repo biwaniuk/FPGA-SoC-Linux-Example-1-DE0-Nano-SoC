@@ -137,6 +137,14 @@
          type = "int";
       }
    }
+   element testblk_0
+   {
+      datum _sortIndex
+      {
+         value = "3";
+         type = "int";
+      }
+   }
 }
 ]]></parameter>
  <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
@@ -158,6 +166,7 @@
  <parameter name="timeStamp" value="0" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
+ <interface name="clk" internal="FPGA_CLK.clk_in" type="clock" dir="end" />
  <interface name="hps_0_f2h_cold_reset_req" internal="hps_0.f2h_cold_reset_req" />
  <interface name="hps_0_f2h_debug_reset_req" internal="hps_0.f2h_debug_reset_req" />
  <interface
@@ -166,12 +175,23 @@
    type="conduit"
    dir="end" />
  <interface name="hps_0_f2h_warm_reset_req" internal="hps_0.f2h_warm_reset_req" />
+ <interface
+   name="hps_0_h2f_reset"
+   internal="hps_0.h2f_reset"
+   type="reset"
+   dir="start" />
+ <interface
+   name="hps_0_h2f_user0_clock"
+   internal="hps_0.h2f_user0_clock"
+   type="clock"
+   dir="start" />
  <interface name="hps_0_hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
  <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
+ <interface name="reset" internal="FPGA_CLK.clk_in_reset" type="reset" dir="end" />
  <module name="FPGA_CLK" kind="clock_source" version="21.1" enabled="1">
-  <parameter name="clockFrequency" value="50000000" />
+  <parameter name="clockFrequency" value="100000000" />
   <parameter name="clockFrequencyKnown" value="true" />
-  <parameter name="inputClockFrequency" value="100000000" />
+  <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
  </module>
  <module name="hps_0" kind="altera_hps" version="21.1" enabled="1">
@@ -522,8 +542,8 @@
   <parameter name="S2FCLK_COLDRST_Enable" value="false" />
   <parameter name="S2FCLK_PENDINGRST_Enable" value="false" />
   <parameter name="S2FCLK_USER0CLK_Enable" value="true" />
-  <parameter name="S2FCLK_USER1CLK_Enable" value="false" />
-  <parameter name="S2FCLK_USER1CLK_FREQ" value="100.0" />
+  <parameter name="S2FCLK_USER1CLK_Enable" value="true" />
+  <parameter name="S2FCLK_USER1CLK_FREQ" value="50.0" />
   <parameter name="S2FCLK_USER2CLK" value="1" />
   <parameter name="S2FCLK_USER2CLK_Enable" value="false" />
   <parameter name="S2FCLK_USER2CLK_FREQ" value="100.0" />
@@ -702,7 +722,7 @@
   <parameter name="show_warning_as_error_msg" value="false" />
   <parameter name="spi_m_clk_div" value="0" />
   <parameter name="usb_mp_clk_div" value="0" />
-  <parameter name="use_default_mpu_clk" value="true" />
+  <parameter name="use_default_mpu_clk" value="false" />
  </module>
  <module
    name="sysid_qsys_0"
@@ -711,6 +731,25 @@
    enabled="1">
   <parameter name="id" value="850104333" />
  </module>
+ <module name="testblk_0" kind="testblk" version="1.0" enabled="1" />
+ <connection
+   kind="avalon"
+   version="21.1"
+   start="testblk_0.avalon_master"
+   end="hps_0.f2h_axi_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="21.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="testblk_0.avalon_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0020" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
  <connection
    kind="avalon"
    version="21.1"
@@ -720,6 +759,16 @@
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
+ <connection
+   kind="clock"
+   version="21.1"
+   start="FPGA_CLK.clk"
+   end="sysid_qsys_0.clk" />
+ <connection
+   kind="clock"
+   version="21.1"
+   start="FPGA_CLK.clk"
+   end="testblk_0.clock_sink" />
  <connection
    kind="clock"
    version="21.1"
@@ -736,25 +785,22 @@
    start="FPGA_CLK.clk"
    end="hps_0.h2f_lw_axi_clock" />
  <connection
-   kind="clock"
+   kind="interrupt"
    version="21.1"
-   start="hps_0.h2f_user0_clock"
-   end="sysid_qsys_0.clk" />
- <connection
-   kind="clock"
-   version="21.1"
-   start="hps_0.h2f_user0_clock"
-   end="FPGA_CLK.clk_in" />
+   start="hps_0.f2h_irq0"
+   end="testblk_0.interrupt_sender">
+  <parameter name="irqNumber" value="0" />
+ </connection>
  <connection
    kind="reset"
    version="21.1"
-   start="hps_0.h2f_reset"
-   end="FPGA_CLK.clk_in_reset" />
- <connection
-   kind="reset"
-   version="21.1"
-   start="hps_0.h2f_reset"
+   start="FPGA_CLK.clk_reset"
    end="sysid_qsys_0.reset" />
+ <connection
+   kind="reset"
+   version="21.1"
+   start="FPGA_CLK.clk_reset"
+   end="testblk_0.reset_sink" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
 </system>

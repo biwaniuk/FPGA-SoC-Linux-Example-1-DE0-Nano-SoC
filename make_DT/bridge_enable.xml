@@ -1,0 +1,6 @@
+<BoardInfo>
+
+<DTAppend name="bridge-enable" type="number" parentlabel="fpgabridge1" val="1"/>
+<DTAppend name="bridge-enable" type="number" parentlabel="fpgabridge2" val="1"/>
+
+</BoardInfo>
