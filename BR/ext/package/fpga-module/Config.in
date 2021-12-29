@@ -1,0 +1,10 @@
+config BR2_PACKAGE_FPGA_MODULE
+	bool "fpga-module"
+	depends on BR2_LINUX_KERNEL
+	help
+          my first module
+
+          http://www.nowhere
+
+comment "fpga-module needs a Linux kernel to be built"
+	depends on !BR2_LINUX_KERNEL

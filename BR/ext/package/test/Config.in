@@ -1,0 +1,9 @@
+config BR2_PACKAGE_TEST
+	bool "test"
+	depends on BR2_LINUX_KERNEL
+	help
+
+          http://www.nowhere
+
+comment "test needs a Linux kernel to be built"
+	depends on !BR2_LINUX_KERNEL
