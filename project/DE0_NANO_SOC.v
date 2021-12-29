@@ -102,10 +102,8 @@ module DE0_NANO_SOC(
 //  Structural coding
 //=======================================================
   soc_system u0 (
-    .clk_clk                               ( hps_fpga_user0_clock), // In  :
-    .reset_reset_n                         ( hps_fpga_reset_n    ), // In  :
-    .hps_0_h2f_user0_clock_clk             ( hps_fpga_user0_clock), // Out :
-    .hps_0_h2f_reset_reset_n               ( hps_fpga_reset_n    ), // Out : 
+    .clk_clk                               ( FPGA_CLK1_50 ), // In  :
+    .reset_reset_n                         ( 1'b1         ), // In  :
     .hps_0_f2h_stm_hw_events_stm_hwevents  ( stm_hw_events       ), //
 `ifdef EXT_RESET
     .hps_0_f2h_cold_reset_req_reset_n      ( ~hps_cold_reset     ), // In  :
