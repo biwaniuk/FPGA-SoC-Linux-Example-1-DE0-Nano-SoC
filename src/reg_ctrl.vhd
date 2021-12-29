@@ -54,10 +54,12 @@ architecture rtl of reg_ctrl is
 
   signal c : T_COMB := COMB_DEFAULT;
 
+  signal done_1, done_2, done_0 : std_logic := '0';
+  
 begin  -- architecture rtl
 
   mem_num  <= c.mem_num;
-  done     <= c.done;
+  done_2     <= c.done;
   rd_addr  <= c.rd_addr;
   wrt_addr <= c.wrt_addr;
 
@@ -114,8 +116,14 @@ begin  -- architecture rtl
     if rising_edge(clk) then
       if reset = '1' then
         r <= REGS_INIT;
+        done_0 <= '0';
+        done_1 <= '0';
+        done <= '0';
       else
         r <= r_n;
+        done_1 <= done_2;
+        done_0 <= done_1;
+        done <= done_0;
       end if;
     end if;
   end process;
