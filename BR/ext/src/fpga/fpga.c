@@ -173,8 +173,8 @@ int fpga_mmap(struct file *filp,
   vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot); 
   remap=dma_mmap_coherent(&my_pdev->dev,vma,fdata, dma_addr, vsize);
   dev_info(&my_pdev->dev, "remap = %d\n", remap);
-  if (vma->vm_ops)
-    return -EINVAL;
+  //if (vma->vm_ops)
+  //    return -EINVAL;
   vma->vm_ops = &fpga_vm_ops;
   fpga_vma_open(vma); 
   return 0;
