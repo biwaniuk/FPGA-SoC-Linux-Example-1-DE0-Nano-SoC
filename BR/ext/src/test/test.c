@@ -86,19 +86,10 @@ int main(int argc, char **argv)
   }
   
   int cnt = -1;
-  while(1) //Primitive wait - TODO: Replace with irq
-    {
-      if(++cnt < 1) { //Print every 3s - waiting shouldn't be that long!
-        printf("Waiting for ready status\n");
-        fflush(stdout);
-        if(cnt = 3000) cnt = -1;
-      }
-      printf("Status: %lu\n",ioctl(plik, FPGA_IOC_READ_STATUS, NULL));
-      fflush(stdout);
-      if(ioctl(plik, FPGA_IOC_READ_STATUS, NULL)) break;
+  while(ioctl(plik, FPGA_IOC_WAIT_DONE, NULL)) {
+      printf("Retrying\n");
       usleep(1000);
     }
-  
   ioctl(plik, FPGA_IOC_WRITE_CTRL, 0);
   printf("FPGA stopped\n");
   

@@ -43,7 +43,7 @@ MODULE_LICENSE("GPL v2");
 #define DEVICE_NAME "fpga"
 #define DEVICE_ID 0xb2002019
 
-int irq=-1;
+int my_irq=-1;
 unsigned long phys_addr = 0;
 bool is_open = false;
 const size_t ALLOC_SIZE = 8192;
@@ -71,7 +71,7 @@ struct cdev * my_cdev = NULL;
 static struct class *class_my_tst = NULL;
 
 /* Queue for reading process */
-DECLARE_WAIT_QUEUE_HEAD (readqueue);
+DECLARE_WAIT_QUEUE_HEAD (done_queue);
 
 struct file_operations Fops = {
   .owner = THIS_MODULE,
@@ -94,6 +94,18 @@ typedef struct device_registers {
 } dev_regs;
 
 static volatile dev_regs * dregs = NULL;
+
+irqreturn_t fpga_irq(int irq, void * dev_id)
+{
+  printk(KERN_INFO "irq returns\n");
+  //If if it is our interrupt,
+  if(dregs->status) {
+    dregs->ctrl = 0;
+    wake_up_interruptible(&done_queue);
+    return IRQ_HANDLED;
+  }
+  return IRQ_NONE; //Our device does not request interrupt
+};
 
 /* Cleanup resources */
 int fpga_remove( struct platform_device * pdev )
@@ -126,15 +138,21 @@ int fpga_remove( struct platform_device * pdev )
 static int fpga_open(struct inode *inode, 
 		     struct file *file)
 {
+  int res;
   if(is_open) return -EBUSY;
   nonseekable_open(inode, file);
   is_open = true;
-  return SUCCESS;
+  res=request_irq(my_irq,fpga_irq,
+      IRQF_SHARED,DEVICE_NAME,(void *) my_pdev); 
+  return res;
 }
 
 static int fpga_release(struct inode *inode, 
 			struct file *file)
 {
+  if(my_irq >= 0) {
+     free_irq(my_irq,(void *) my_pdev);
+  }     
   is_open = false;
   return SUCCESS;
 }
@@ -189,6 +207,12 @@ static int fpga_probe(struct platform_device * pdev)
     dev_err(&pdev->dev, "Error reading the register addresses.\n");
     res=-EINVAL;
     goto err1;
+  }
+  my_irq = platform_get_irq(pdev,0);
+  if(my_irq < 0) {
+      dev_err(&pdev->dev,"I can't find IRQ");
+      res = my_irq;
+      goto err1;
   }
   /* TODO: Rework basing on:
    * https://bootlin.com/doc/training/linux-kernel/linux-kernel-slides.pdf 289 */
@@ -268,6 +292,12 @@ static int fpga_probe(struct platform_device * pdev)
   return res;
 }
 
+inline uint32_t get_status(void)
+{
+  mb();
+  return dregs->status;
+}
+
 long fpga_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
   switch(cmd) {
@@ -282,6 +312,11 @@ long fpga_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     case FPGA_IOC_READ_STATUS: {
       mb();
       return dregs->status;
+    }
+    case FPGA_IOC_WAIT_DONE: {
+      if(wait_event_interruptible(done_queue,get_status != 0))
+         return -ERESTARTSYS;
+      return 0;      
     }
     case FPGA_IOC_READ_XOR_KEY: {
       mb();
