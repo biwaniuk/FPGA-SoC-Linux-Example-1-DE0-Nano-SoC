@@ -11,4 +11,4 @@
   --clocks \
   --reset
 
-dtc -I dts -O dtb -o de0_board.dtb soc_system.dts
+dtc -@ -I dts -O dtb -o de0_board.dtb soc_system.dts
