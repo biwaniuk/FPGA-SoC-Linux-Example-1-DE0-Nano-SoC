@@ -1,0 +1,42 @@
+<BoardInfo>
+
+<DTAppend name="mydev@0" type="node" parentlabel="hps_0_spim0" newlabel="mydev0"/>
+<DTAppend name="compatible" type="string" parentlabel="mydev0" val="linux,spidev"/>
+<DTAppend name="spi-max-frequency" parentlabel="mydev0">
+<val type="number">500000</val>
+</DTAppend>
+<DTAppend name="reg" parentlabel="mydev0">
+<val type="number">0</val>
+</DTAppend>
+<DTAppend name="status" type="string" parentlabel="mydev0" val="okay"/>
+
+<DTAppend name="mydev@1" type="node" parentlabel="hps_0_spim0" newlabel="mydev1"/>
+<DTAppend name="compatible" type="string" parentlabel="mydev1" val="linux,spidev"/>
+<DTAppend name="spi-max-frequency" parentlabel="mydev1">
+<val type="number">500000</val>
+</DTAppend>
+<DTAppend name="reg" parentlabel="mydev1">
+<val type="number">1</val>
+</DTAppend>
+<DTAppend name="status" type="string" parentlabel="mydev0" val="okay"/>
+
+<DTAppend name="mydev@2" type="node" parentlabel="hps_0_spim0" newlabel="mydev2"/>
+<DTAppend name="compatible" type="string" parentlabel="mydev2" val="linux,spidev"/>
+<DTAppend name="spi-max-frequency" parentlabel="mydev2">
+<val type="number">500000</val>
+</DTAppend>
+<DTAppend name="reg" parentlabel="mydev2">
+<val type="number">2</val>
+</DTAppend>
+<DTAppend name="status" type="string" parentlabel="mydev0" val="okay"/>
+
+<DTAppend name="mydev@3" type="node" parentlabel="hps_0_spim0" newlabel="mydev3"/>
+<DTAppend name="compatible" type="string" parentlabel="mydev3" val="linux,spidev"/>
+<DTAppend name="spi-max-frequency" parentlabel="mydev3">
+<val type="number">500000</val>
+</DTAppend>
+<DTAppend name="reg" parentlabel="mydev3">
+<val type="number">3</val>
+</DTAppend>
+<DTAppend name="status" type="string" parentlabel="mydev3" val="okay"/>
+</BoardInfo>

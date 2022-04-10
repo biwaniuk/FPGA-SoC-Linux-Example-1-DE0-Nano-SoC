@@ -19,7 +19,19 @@ module DE0_NANO_SOC(
 	input 		          		FPGA_CLK1_50,
 	input 		          		FPGA_CLK2_50,
 	input 		          		FPGA_CLK3_50,
-
+	
+	//////////// I2C2 ///////////
+	inout                      fpga_i2c_sda,
+	inout                      fpga_i2c_scl,
+	//////////// SPI0 ///////////
+	output							spi0_mosi,
+   input  							spi0_miso,
+   input 							spi0_ss_in_n,
+	output							spi0_oe_n,
+   output							spi0_ss_0_n,  
+   output							spi0_ss_1_n,  
+   output							spi0_ss_2_n,  
+   output							spi0_ss_3_n,  
 	//////////// HPS //////////
 	inout 		          		HPS_CONV_USB_N,
 	output		    [14:0]		HPS_DDR3_ADDR,
@@ -70,6 +82,8 @@ module DE0_NANO_SOC(
 	input 		          		HPS_USB_NXT,
 	output		          		HPS_USB_STP,
 
+	//////////// TEST /////////
+	output                     testout,
 	//////////// KEY //////////
 	input 		     [1:0]		KEY,
 
@@ -94,6 +108,14 @@ module DE0_NANO_SOC(
   wire        hps_warm_reset;
   wire        hps_debug_reset;
   wire [27:0] stm_hw_events;
+  wire        sda_o;
+  wire        sda_o_e;
+  wire        scl_o;
+  wire        scl_o_e;
+
+  reg [33:0] counter;
+  reg state;
+
 
 // connection of internal logics
   assign stm_hw_events = {{28{1'b0}}};
@@ -158,6 +180,18 @@ module DE0_NANO_SOC(
     .hps_0_hps_io_hps_io_gpio_inst_GPIO53  ( HPS_LED             ), //
     .hps_0_hps_io_hps_io_gpio_inst_GPIO54  ( HPS_KEY             ), //
     .hps_0_hps_io_hps_io_gpio_inst_GPIO61  ( HPS_GSENSOR_INT     ), //
+	 .hps_0_i2c2_out_data                   ( sda_o_e             ), //
+    .hps_0_i2c2_sda                        ( sda_o               ), //
+    .hps_0_i2c2_clk_clk                    ( scl_o_e             ), //
+    .hps_0_i2c2_scl_in_clk                 ( scl_o               ), //
+	 .hps_0_spim0_txd                       ( spi0_mosi           ), //
+    .hps_0_spim0_rxd                       ( spi0_miso           ), //
+    .hps_0_spim0_ss_in_n                   ( spi0_ss_in_n        ), //
+    .hps_0_spim0_ssi_oe_n                  ( spi0_oe_n           ), //
+    .hps_0_spim0_ss_0_n                    ( spi0_ss_0_n         ), //
+    .hps_0_spim0_ss_1_n                    ( spi0_ss_1_n         ), //
+    .hps_0_spim0_ss_2_n                    ( spi0_ss_2_n         ), //
+    .hps_0_spim0_ss_3_n                    ( spi0_ss_3_n         ), //
     .memory_mem_a                          ( HPS_DDR3_ADDR       ), //
     .memory_mem_ba                         ( HPS_DDR3_BA         ), //
     .memory_mem_ck                         ( HPS_DDR3_CK_P       ), //
@@ -176,6 +210,18 @@ module DE0_NANO_SOC(
     .memory_oct_rzqin                      ( HPS_DDR3_RZQ        ) //
     //.led_OUT                               ( LED                 )  //
   );
+
+  assign fpga_i2c_scl = scl_o_e ? 1'b0 : 1'bZ;
+  assign fpga_i2c_sda = sda_o_e ? 1'b0 : 1'bZ;
+  assign scl_o = fpga_i2c_scl;
+  assign sda_o = fpga_i2c_sda;
+  
+assign testout = state;
+
+always @ (posedge FPGA_CLK1_50) begin
+    counter <= counter + 1;
+    state <= counter[20]; //
+end
 
 `ifdef EXT_RESET
   hps_reset hps_reset_inst (
@@ -209,6 +255,7 @@ module DE0_NANO_SOC(
     .signal_in (hps_reset_req[2]),
     .pulse_out (hps_debug_reset)
   );
+  
   defparam pulse_debug_reset.PULSE_EXT = 32;
   defparam pulse_debug_reset.EDGE_TYPE = 1;
   defparam pulse_debug_reset.IGNORE_RST_WHILE_BUSY = 1;

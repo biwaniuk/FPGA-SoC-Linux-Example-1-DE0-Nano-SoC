@@ -6,6 +6,7 @@
   --board hps_common_board_info.xml\
   --board bridge_enable.xml\
   --board periphs_enable.xml\
+  --board spim0_spidev.xml\
   --bridge-removal all\
   --clocks \
   --reset
