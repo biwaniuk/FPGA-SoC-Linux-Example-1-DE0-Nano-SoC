@@ -193,6 +193,11 @@
    type="clock"
    dir="end" />
  <interface name="hps_0_spim0" internal="hps_0.spim0" type="conduit" dir="end" />
+ <interface
+   name="hps_0_spim0_sclk_out"
+   internal="hps_0.spim0_sclk_out"
+   type="clock"
+   dir="start" />
  <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
  <interface name="reset" internal="FPGA_CLK.clk_in_reset" type="reset" dir="end" />
  <module name="FPGA_CLK" kind="clock_source" version="21.1" enabled="1">

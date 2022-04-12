@@ -24,6 +24,7 @@ module DE0_NANO_SOC(
 	inout                      fpga_i2c_sda,
 	inout                      fpga_i2c_scl,
 	//////////// SPI0 ///////////
+	output                     spi0_sclk,
 	output							spi0_mosi,
    input  							spi0_miso,
    input 							spi0_ss_in_n,
@@ -192,6 +193,7 @@ module DE0_NANO_SOC(
     .hps_0_spim0_ss_1_n                    ( spi0_ss_1_n         ), //
     .hps_0_spim0_ss_2_n                    ( spi0_ss_2_n         ), //
     .hps_0_spim0_ss_3_n                    ( spi0_ss_3_n         ), //
+    .hps_0_spim0_sclk_out_clk              ( spi0_sclk           ), //
     .memory_mem_a                          ( HPS_DDR3_ADDR       ), //
     .memory_mem_ba                         ( HPS_DDR3_BA         ), //
     .memory_mem_ck                         ( HPS_DDR3_CK_P       ), //
