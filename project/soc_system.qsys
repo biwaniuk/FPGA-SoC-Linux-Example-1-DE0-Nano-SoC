@@ -134,6 +134,14 @@
          type = "String";
       }
    }
+   element soc_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
    element sysid_qsys_0
    {
       datum _sortIndex
@@ -147,6 +155,14 @@
       datum _sortIndex
       {
          value = "3";
+         type = "int";
+      }
+   }
+   element timer1_0
+   {
+      datum _sortIndex
+      {
+         value = "4";
          type = "int";
       }
    }
@@ -744,6 +760,11 @@
   <parameter name="id" value="850104333" />
  </module>
  <module name="testblk_0" kind="testblk" version="1.0" enabled="1" />
+ <module name="timer1_0" kind="timer1" version="1.0" enabled="1">
+  <parameter name="C_S_AXI_ACLK_FREQ_HZ" value="100000000" />
+  <parameter name="C_S_AXI_ADDR_WIDTH" value="5" />
+  <parameter name="C_S_AXI_DATA_WIDTH" value="32" />
+ </module>
  <connection
    kind="avalon"
    version="21.1"
@@ -760,6 +781,15 @@
    end="testblk_0.avalon_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="21.1"
+   start="hps_0.h2f_axi_master"
+   end="timer1_0.axi_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -785,6 +815,11 @@
    kind="clock"
    version="21.1"
    start="FPGA_CLK.clk"
+   end="timer1_0.clock_sink" />
+ <connection
+   kind="clock"
+   version="21.1"
+   start="FPGA_CLK.clk"
    end="hps_0.f2h_axi_clock" />
  <connection
    kind="clock"
@@ -804,6 +839,13 @@
   <parameter name="irqNumber" value="0" />
  </connection>
  <connection
+   kind="interrupt"
+   version="21.1"
+   start="hps_0.f2h_irq0"
+   end="timer1_0.irq">
+  <parameter name="irqNumber" value="1" />
+ </connection>
+ <connection
    kind="reset"
    version="21.1"
    start="FPGA_CLK.clk_reset"
@@ -813,6 +855,11 @@
    version="21.1"
    start="FPGA_CLK.clk_reset"
    end="testblk_0.reset_sink" />
+ <connection
+   kind="reset"
+   version="21.1"
+   start="FPGA_CLK.clk_reset"
+   end="timer1_0.reset_sink" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
 </system>
