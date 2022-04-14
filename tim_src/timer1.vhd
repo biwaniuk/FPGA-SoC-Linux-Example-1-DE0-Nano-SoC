@@ -6,7 +6,7 @@
 -- Author     : Wojciech M. Zabołotny  <wojciech.zabolotny@pw.edu.pl>
 -- Company    : Institute of Electronic Systems
 -- Created    : 2022-04-13
--- Last update: 2022-04-13
+-- Last update: 2022-04-14
 -- Platform   : 
 -- Standard   : VHDL'93/02
 -- License    : BSD 2-Clause License
@@ -78,16 +78,16 @@ end entity timer1;
 architecture rtl of timer1 is
 
 -- Type declarations
-  type main_fsm_type is (reset, idle, read_transaction_in_progress, write_transaction_in_progress, complete);
+  type main_fsm_type is (reset, idle, read_transaction_in_progress, read_transaction_in_progress_2, write_transaction_in_progress, complete);
 
   signal current_state, next_state            : main_fsm_type;
   signal write_enable_registers               : std_logic;
   signal send_read_data_to_AXI                : std_logic;
   signal Local_Reset                          : std_logic;
   signal combined_S_AXI_AWVALID_S_AXI_ARVALID : std_logic_vector(1 downto 0);
-signal local_address : integer range 0 to 2**C_S_AXI_ADDR_WIDTH;
-signal local_address_valid : std_logic;
-  
+  signal local_address                        : integer range 0 to 2**C_S_AXI_ADDR_WIDTH;
+  signal local_address_valid                  : std_logic;
+
   signal id_register   : std_logic_vector(31 downto 0) := (others => '0');
   signal stat_reg      : std_logic_vector(31 downto 0) := (others => '0');
   signal stat_register : std_logic_vector(31 downto 0) := (others => '0');
@@ -96,17 +96,17 @@ signal local_address_valid : std_logic;
   signal cntl_register : std_logic_vector(31 downto 0) := (others => '0');
   signal cnth_register : std_logic_vector(31 downto 0) := (others => '0');
 
-  signal id_register_address_valid : std_logic :=  '0';
-  signal stat_register_address_valid : std_logic :=  '0';
-  signal divl_register_address_valid : std_logic :=  '0';
-  signal divh_register_address_valid : std_logic :=  '0';
-  signal cntl_register_address_valid : std_logic :=  '0';
-  signal cnth_register_address_valid : std_logic :=  '0';
+  signal id_register_address_valid   : std_logic := '0';
+  signal stat_register_address_valid : std_logic := '0';
+  signal divl_register_address_valid : std_logic := '0';
+  signal divh_register_address_valid : std_logic := '0';
+  signal cntl_register_address_valid : std_logic := '0';
+  signal cnth_register_address_valid : std_logic := '0';
 
   signal timer_latch, timer_count, timer_limit : unsigned(63 downto 0);
-  
+
   signal irq_req, irq_clear, set_timer : std_logic := '0';
-  
+
 begin
 
   Local_Reset                          <= not S_AXI_ARESETN;
@@ -152,16 +152,29 @@ begin
           when others => null;
         end case;
 
+        -- Handling of read transaction had to be changed, as described in
+        -- https://www.fpgarelated.com/showthread/comp.arch.fpga/127408-1.php
+        --
+        -- The Intel/Altera interconnect does not accept RVALID in the same
+        -- cycle when ARREADY is asserted.
+        -- Therefore, an additional state read_transaction_in_progress_2
+        -- had to be introduced.
+
       when read_transaction_in_progress =>
+        next_state    <= read_transaction_in_progress;
+        S_AXI_ARREADY <= S_AXI_ARVALID;
+        if S_AXI_ARVALID = '1' then
+          next_state <= read_transaction_in_progress_2;
+        end if;
+
+      when read_transaction_in_progress_2 =>
         next_state            <= read_transaction_in_progress;
-        S_AXI_ARREADY         <= S_AXI_ARVALID;
         S_AXI_RVALID          <= '1';
         S_AXI_RRESP           <= "00";
         send_read_data_to_AXI <= '1';
         if S_AXI_RREADY = '1' then
           next_state <= complete;
         end if;
-
 
       when write_transaction_in_progress =>
         next_state             <= write_transaction_in_progress;
