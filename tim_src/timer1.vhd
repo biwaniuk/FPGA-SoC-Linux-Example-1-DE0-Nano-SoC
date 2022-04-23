@@ -6,7 +6,7 @@
 -- Author     : Wojciech M. Zabołotny  <wojciech.zabolotny@pw.edu.pl>
 -- Company    : Institute of Electronic Systems
 -- Created    : 2022-04-13
--- Last update: 2022-04-14
+-- Last update: 2022-04-23
 -- Platform   : 
 -- Standard   : VHDL'93/02
 -- License    : BSD 2-Clause License
@@ -336,7 +336,7 @@ begin
       irq_clear <= '0';
       if Local_Reset = '1' then
         timer_latch <= (others => '0');
-      elsif divh_register_address_valid = '1' then
+      elsif cntl_register_address_valid = '1' then
         if send_read_data_to_AXI = '1' then
           -- Actions taken when reading the register
           timer_latch <= timer_count;
@@ -355,7 +355,7 @@ begin
     if (S_AXI_ACLK'event and S_AXI_ACLK = '1') then
       if Local_Reset = '1' then
         null;
-      elsif divh_register_address_valid = '1' then
+      elsif cnth_register_address_valid = '1' then
         if send_read_data_to_AXI = '1' then
           -- Actions taken when reading the register
           null;
@@ -376,6 +376,7 @@ begin
     if S_AXI_ACLK'event and S_AXI_ACLK = '1' then  -- rising clock edge
       if Local_Reset = '1' then
         timer_count <= (others => '0');
+        irq_req     <= '0';
       else
         -- Clear interrupt if required
         if irq_clear = '1' then
